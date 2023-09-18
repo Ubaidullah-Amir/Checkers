@@ -15,30 +15,65 @@ class Game:
     def __init__(self,screen) -> None:
         self.checker=checker(screen)
         self.turn="white"
+        self.hasEliminated=False
         self.selectedPiece=None
-        self.possibleMoves=None #these serves as allowable boxes to move the pieces
+        self.possibleMoves=[] #these serves as allowable boxes to move the pieces
+        self.opponentDict=self.checker.oppnentDictMaker(self.turn)
         self.start()
     def start(self):
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    # first check if the clicking on nextMove otherwise selectedPiece will be none
-                    if self.possibleMoves:
-                        print(self.selectedPiece,self.possibleMoves)
-                        hasMoved =self.checker.moveToNextPosition(self.selectedPiece,self.possibleMoves,pygame.mouse.get_pos()) #it does all internal board work
-                        if hasMoved:
+                    if not self.hasEliminated:
+                        value=self.checker.selectPiece(pygame.mouse.get_pos(),self.turn,self.opponentDict)
+                        if value:
+                            self.selectedPiece=value
+                            self.possibleMoves = self.checker.nextPossibleMoves(self.selectedPiece)
+                            opponentArr=[]
+                            for move in self.possibleMoves:
+                                if move["opponent"]:
+                                    opponentArr.append(move)
+                            if len(opponentArr)>0:
+                                self.possibleMoves=opponentArr
+                            continue
+                    if self.selectedPiece:
+                        hasMoved,hasEliminated,piece =self.checker.moveToNextPosition(self.selectedPiece,self.possibleMoves,pygame.mouse.get_pos()) #it does all internal board work
+
+                        if hasMoved and not hasEliminated:
+                            # switch turn
                             if self.selectedPiece.color =="white":
                                 self.turn="black"
                             else:
                                 self.turn= "white"
                             self.selectedPiece=None
-                            self.possibleMoves=None
-                            print(self.checker)
-                        
-                    # to select a piece of a specific player
-                    self.selectedPiece =self.checker.selectPiece(pygame.mouse.get_pos(),self.turn) #selectedPiece can be None
-                    # select the next box to move to 
-                    # return True if moved so change turn and all attributes here 
+                            self.possibleMoves=[]
+                            self.hasEliminated=False
+                            # oppnentDictMaker bcoz board has changed and turn also changed
+                            self.opponentDict=self.checker.oppnentDictMaker(self.turn)
+                        if hasMoved and hasEliminated:
+
+                            self.hasEliminated=True
+                            self.selectedPiece=piece #newPiece
+                            self.possibleMoves = self.checker.nextPossibleMoves(self.selectedPiece)
+                            opponentArr=[]
+                            for move in self.possibleMoves:
+                                if move["opponent"]:
+                                    opponentArr.append(move)
+                            if len(opponentArr)>0:
+                                self.possibleMoves=opponentArr
+                                # oppnentDictMaker bcoz board has changed but turn remains same 
+                                self.opponentDict=self.checker.oppnentDictMaker(self.turn)
+                            else:
+                                # switch turn
+                                if self.selectedPiece.color =="white":
+                                    self.turn="black"
+                                else:
+                                    self.turn= "white"
+                                self.selectedPiece=None
+                                self.possibleMoves=[]
+                                self.hasEliminated=False
+                                # oppnentDictMaker bcoz board has changed and turn also changed
+                                self.opponentDict=self.checker.oppnentDictMaker(self.turn)
                     
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -49,9 +84,7 @@ class Game:
             self.checker.drawGuiBoard()
             self.checker.showText()
             if(self.selectedPiece):
-                self.possibleMoves = self.checker.nextPossibleMoves(self.selectedPiece)
-                print(self.selectedPiece," moves:",self.possibleMoves)
-                # to highlight the possibleBoxes
+                
                 self.checker.highlightMoves(self.possibleMoves)
             # Update the display
             pygame.display.flip()

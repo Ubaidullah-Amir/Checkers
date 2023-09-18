@@ -68,16 +68,32 @@ class checker:
         for row in range(8):
             for column in range(8):
                 self.guiBoard[row][column].draw(self.screen)
-    def selectPiece(self,mousePos,color):
-                for row in range(8):
-                    for column in range(8):
-                        collide=self.guiBoard[row][column].rect.collidepoint(mousePos)
-                        isPiece=type(self.guiBoard[row][column]) is Piece
-                        colorMatch=color ==self.guiBoard[row][column].color
+    def selectPiece(self,mousePos,color,opponentDict):
+                if len(opponentDict)==0:
+                    # if opponentDict is empty you can select any piece of specified color
+                    for row in range(8):
+                        for column in range(8):
+                            collide=self.guiBoard[row][column].rect.collidepoint(mousePos)
+                            isPiece=type(self.guiBoard[row][column]) is Piece
+                            colorMatch=color ==self.guiBoard[row][column].color
+
+                            if collide and isPiece and colorMatch:
+                                return self.guiBoard[row][column]
+                    return None
+                else:
+                    # but if it is not empty then you can select only pieces in opponentDict
+                    for positionStr in opponentDict:
+                        piece=opponentDict[positionStr]
+                        collide=piece.rect.collidepoint(mousePos) #only this is necessary rest are redundant
+                        isPiece=type(piece) is Piece
+                        colorMatch=color ==piece.color
 
                         if collide and isPiece and colorMatch:
-                            return self.guiBoard[row][column]
-                return None
+                            return piece
+                    return None
+
+
+                
     
     def nextPossibleMoves(self,selectedPiece):
         row,column = selectedPiece.position
@@ -158,6 +174,7 @@ class checker:
     def moveToNextPosition(self,selectedPiece,possibleMoves,mousePos):
         # possible move is list of dictionary
         # here we also see whther there is a possiblity of a king
+        
         for move in possibleMoves:
             row,column=move["nextPosition"]
                 
@@ -204,12 +221,13 @@ class checker:
                         else:
                             self.blackPieces-=1
                         self.guiBoard[oldrow+1][oldcol-1]=Box("black",(oldrow+1,oldcol-1))
+                    return True,True,self.guiBoard[row][column]
                 
-                return True
+                return True,False,None
             
                 
 
-        return False
+        return False,False,None
     
     def showText(self):
         if self.whitePieces==0:
@@ -233,6 +251,19 @@ class checker:
         self.screen.blit(whitePieceTxt, whitePiecetxtRect)
         
         self.screen.blit(blackPieceTxt, blackPiecetxtRect)
+    def oppnentDictMaker(self,turn):
+            oppDict={}
+            for row in range(8):
+                for column in range(8):
+                    item = self.guiBoard[row][column]
+                    if type(item) ==Piece and item.color==turn:
+                        possibleMove=self.nextPossibleMoves(item)
+                        for move in possibleMove:
+                            if move["opponent"]:
+                                oppDict[str(row)+","+str(column)]=self.guiBoard[row][column]
+            return oppDict
+                            
+
     def __str__(self):
         string="."
         for row in range(8):
