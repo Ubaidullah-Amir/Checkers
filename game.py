@@ -81,7 +81,7 @@ class Game:
             
             # Clear the screen
             screen.fill(GREEN)
-            self.checker.drawGuiBoard()
+            self.checker.drawGuiBoard(self.turn)
             self.checker.showText()
             if(self.selectedPiece):
                 

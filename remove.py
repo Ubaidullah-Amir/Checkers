@@ -1,42 +1,39 @@
+
 import pygame
-import sys
-from checker import *
-# Initialize Pygame
-pygame.init()
+from pygame.locals import *
 
-# Constants for colors
-WHITE = (255, 255, 255)
-GREEN = (0, 255, 0)
 RED = (255, 0, 0)
+GRAY = (150, 150, 150)
 
-# Set up the display
-width, height = 800, 600
-screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption("checker")
-checker=checker(screen)
-print(checker)
-# Main game loop
-selectedPiece=None
-while True:
-      for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                  selectedPiece=checker.selectPiece(pygame.mouse.get_pos(),"white")
-            if event.type == pygame.QUIT:
-                  pygame.quit()
-                  sys.exit()
-      
-      # Clear the screen
-      screen.fill(GREEN)
-      checker.drawGuiBoard()
-      if(selectedPiece):
-            possibleMoves = checker.nextPossibleMoves(selectedPiece)
-            temp=[]
-            for move in possibleMoves:
-                  temp.append(move["nextPosition"])
-            possibleMoves=temp
-            print(selectedPiece," possible moves ",possibleMoves)
-            # to highlight the possibleBoxes
-            checker.highlightMoves(possibleMoves)
-            
-      # Update the display
-      pygame.display.flip()
+pygame.init()
+w, h = 640, 240
+screen = pygame.display.set_mode((w, h))
+running = True
+
+img = pygame.image.load('whiteKing.png')
+img.convert()
+rect = img.get_rect()
+rect.center = w//2, h//2
+moving = False
+
+while running:
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            running = False
+
+        elif event.type == MOUSEBUTTONDOWN:
+            if rect.collidepoint(event.pos):
+                moving = True
+
+        elif event.type == MOUSEBUTTONUP:
+            moving = False
+
+        elif event.type == MOUSEMOTION and moving:
+            rect.move_ip(event.rel)
+    
+    screen.fill(GRAY)
+    screen.blit(img, rect)
+    pygame.draw.rect(screen, RED, rect, -1)
+    pygame.display.update()
+
+pygame.quit()

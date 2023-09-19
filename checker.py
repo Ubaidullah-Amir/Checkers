@@ -64,10 +64,13 @@ class checker:
             self.guiBoard.append(rowArr)
             rowArr=[]
 
-    def drawGuiBoard(self):
+    def drawGuiBoard(self,turn):
         for row in range(8):
             for column in range(8):
-                self.guiBoard[row][column].draw(self.screen)
+                if type(self.guiBoard[row][column]) is Piece:
+                    self.guiBoard[row][column].draw(self.screen,turn)
+                else:
+                    self.guiBoard[row][column].draw(self.screen)
     def selectPiece(self,mousePos,color,opponentDict):
                 if len(opponentDict)==0:
                     # if opponentDict is empty you can select any piece of specified color
@@ -228,7 +231,12 @@ class checker:
                 
 
         return False,False,None
-    
+    def highlightOwnPieces(self,color):
+        for row in range(8):
+            for column in range(8):
+                item=self.guiBoard[row][column]
+                if type(item) is Piece and item.color==color:
+                    item.highLight(self.screen)
     def showText(self):
         if self.whitePieces==0:
             winningTxt=self.font.render("black has won", True, (0,100,150), (100,12,160))

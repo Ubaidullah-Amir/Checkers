@@ -131,13 +131,19 @@ class Piece:
         self.position=position
         self.rect = self.img.get_rect()
     # to draw a piece
-    def draw(self,screen):
+    def draw(self,screen,color):
         size=60
         y,x=self.position
         x,y=x*size,y*size
         self.rect.topleft=x,y
-        screen.blit(self.img, self.rect)
-        pygame.draw.rect(screen, (252, 3, 3), self.rect, 1)
+        if color == self.color:
+            screen.blit(self.img, self.rect)
+            pygame.draw.rect(screen, (100, 3, 3), self.rect, 5)
+        else:
+            screen.blit(self.img, self.rect)
+            pygame.draw.rect(screen, (252, 3, 3), self.rect, -1)
+    
+        
     def __str__(self):
         return "P"+str(self.color)+str(self.position)
 class Box:
@@ -164,6 +170,7 @@ class Box:
         elif self.color == "black":
             # black box
             pygame.draw.rect(screen,(0,0,0) ,self.rect)
+    
     def __str__(self):
         return "B"+str(self.color)+str(self.position)
 class Circle:
