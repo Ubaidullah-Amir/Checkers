@@ -177,7 +177,7 @@ class checker:
     def moveToNextPosition(self,selectedPiece,possibleMoves,mousePos):
         # possible move is list of dictionary
         # here we also see whther there is a possiblity of a king
-        
+        becomeKing=False
         for move in possibleMoves:
             row,column=move["nextPosition"]
                 
@@ -185,18 +185,24 @@ class checker:
             if collide :
                 # creates a King or a Piece
                 if selectedPiece.color == "white":
-
-                    if row == 0 or selectedPiece.isKing:
-                        # row is 0 so white piece becomes a King
+                    if row==0 and not selectedPiece.isKing:
+                        # white piece becomes a King
+                        self.guiBoard[row][column]=Piece("white",(row,column),True)
+                        becomeKing=True
+                    elif selectedPiece.isKing:
                         self.guiBoard[row][column]=Piece("white",(row,column),True)
                     else:
                         self.guiBoard[row][column]=Piece("white",(row,column))
                 else:
-                    if row == 7 or selectedPiece.isKing:
-                        # row is 7 so black piece becomes a King
+                    if row==7 and not selectedPiece.isKing:
+                        # black piece becomes a King
+                        self.guiBoard[row][column]=Piece("black",(row,column),True)
+                        becomeKing=True
+                    elif selectedPiece.isKing:
                         self.guiBoard[row][column]=Piece("black",(row,column),True)
                     else:
                         self.guiBoard[row][column]=Piece("black",(row,column))
+                
                 oldrow,oldcol=selectedPiece.position
                 self.guiBoard[oldrow][oldcol]=Box("black",(oldrow,oldcol))
                 if move['opponent']:
@@ -224,13 +230,13 @@ class checker:
                         else:
                             self.blackPieces-=1
                         self.guiBoard[oldrow+1][oldcol-1]=Box("black",(oldrow+1,oldcol-1))
-                    return True,True,self.guiBoard[row][column]
+                    return True,True,self.guiBoard[row][column],becomeKing
                 
-                return True,False,None
+                return True,False,None,becomeKing
             
                 
 
-        return False,False,None
+        return False,False,None,becomeKing
     def highlightOwnPieces(self,color):
         for row in range(8):
             for column in range(8):

@@ -37,8 +37,19 @@ class Game:
                                 self.possibleMoves=opponentArr
                             continue
                     if self.selectedPiece:
-                        hasMoved,hasEliminated,piece =self.checker.moveToNextPosition(self.selectedPiece,self.possibleMoves,pygame.mouse.get_pos()) #it does all internal board work
-
+                        hasMoved,hasEliminated,piece,becameKing =self.checker.moveToNextPosition(self.selectedPiece,self.possibleMoves,pygame.mouse.get_pos()) #it does all internal board work
+                        if hasMoved and becameKing:
+                            # switch turn
+                            if self.selectedPiece.color =="white":
+                                self.turn="black"
+                            else:
+                                self.turn= "white"
+                            self.selectedPiece=None
+                            self.possibleMoves=[]
+                            self.hasEliminated=False
+                            # oppnentDictMaker bcoz board has changed and turn also changed
+                            self.opponentDict=self.checker.oppnentDictMaker(self.turn)
+                            continue
                         if hasMoved and not hasEliminated:
                             # switch turn
                             if self.selectedPiece.color =="white":
