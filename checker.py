@@ -249,13 +249,13 @@ class checker:
             winningtxtRect = winningTxt.get_rect()
             winningtxtRect.center=(500,30)
             self.screen.blit(winningTxt, winningtxtRect)
-            return
+            return "BLACK_WON"
         if self.blackPieces==0:
             winningTxt=self.font.render("white has won", True, (0,100,150), (100,12,160))
             winningtxtRect = winningTxt.get_rect()
             winningtxtRect.center=(600,30)
             self.screen.blit(winningTxt, winningtxtRect)
-            return
+            return "WHITE_WON"
         whitePieceTxt=self.font.render("white count:"+str(self.whitePieces), True, (0,100,150), (100,12,160))
         blackPieceTxt=self.font.render("black count"+str(self.blackPieces), True, (0,100,150), (100,12,160))
         whitePiecetxtRect = whitePieceTxt.get_rect()

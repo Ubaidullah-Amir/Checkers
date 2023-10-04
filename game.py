@@ -19,7 +19,64 @@ class Game:
         self.selectedPiece=None
         self.possibleMoves=[] #these serves as allowable boxes to move the pieces
         self.opponentDict=self.checker.oppnentDictMaker(self.turn)
-        self.start()
+        self.blackWin=0
+        self.whiteWin=0
+        self.showMenu("New Game")
+        while True:
+            gameWon = self.start()
+            if gameWon == "BLACK_WON":
+                self.blackWin+=1
+                self.showFinishMenu(" try again")
+            if gameWon == "WHITE_WON":
+                self.whiteWin+=1
+                self.showFinishMenu(" try again")
+
+    def showMenu(self,text):
+        font = pygame.font.Font('freesansbold.ttf', 32)
+        NewGame=font.render(text, True, (0,100,150), (100,12,160))
+        NewGameRect = NewGame.get_rect()
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    collide=NewGameRect.collidepoint(pygame.mouse.get_pos())
+                    if collide:
+                        return
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+            screen.fill(WHITE)
+            
+            
+            NewGameRect.center=(500,30)
+            screen.blit(NewGame, NewGameRect)
+            # Update the display
+            pygame.display.flip()
+    def showFinishMenu(self,text):
+        font = pygame.font.Font('freesansbold.ttf', 32)
+        TryAgain=font.render("Try Again", True, (0,100,150), (100,12,160))
+        TryAgainRect = TryAgain.get_rect()
+        BlackWonText=font.render("Black Won ---"+str(self.blackWin), True, (0,100,150), (100,12,160))
+        BlackWonTextRect = BlackWonText.get_rect()
+        WhiteWonText=font.render("White Won ---"+str(self.whiteWin), True, (0,100,150), (100,12,160))
+        WhiteWonTextRect = WhiteWonText.get_rect()
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    collide=TryAgainRect.collidepoint(pygame.mouse.get_pos())
+                    if collide:
+                        return
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+            screen.fill(WHITE)
+            WhiteWonTextRect.center=(500,200)
+            screen.blit(WhiteWonText, WhiteWonTextRect)
+            BlackWonTextRect.center=(500,100)
+            screen.blit(BlackWonText, BlackWonTextRect)
+            TryAgainRect.center=(500,30)
+            screen.blit(TryAgain, TryAgainRect)
+            # Update the display
+            pygame.display.flip()
     def start(self):
         while True:
             for event in pygame.event.get():
@@ -93,7 +150,15 @@ class Game:
             # Clear the screen
             screen.fill(GREEN)
             self.checker.drawGuiBoard(self.turn)
-            self.checker.showText()
+            gameEnded = self.checker.showText()
+            if gameEnded == "BLACK_WON" or gameEnded == "WHITE_WON":
+                self.checker=checker(screen)
+                self.turn="white"
+                self.hasEliminated=False
+                self.selectedPiece=None
+                self.possibleMoves=[] 
+                self.opponentDict=self.checker.oppnentDictMaker(self.turn)
+                return gameEnded
             if(self.selectedPiece):
                 
                 self.checker.highlightMoves(self.possibleMoves)
