@@ -23,7 +23,7 @@ class Game:
         self.opponentDict=self.checker.oppnentDictMaker(self.turn)
         self.blackWin=0
         self.whiteWin=0
-        # self.showMenu("New Game")
+        self.showMenu("New Game")
         while True:
             gameWon = self.start()
             if gameWon == "BLACK_WON":
@@ -152,7 +152,7 @@ class Game:
             # Clear the screen
             screen.fill(LIGHTBLUE)
             self.checker.drawGuiBoard(self.turn)
-            gameEnded = self.checker.showText()
+            gameEnded = self.checker.showText(self.blackWin,self.whiteWin)
             if gameEnded == "BLACK_WON" or gameEnded == "WHITE_WON":
                 self.checker=checker(screen)
                 self.turn="white"

@@ -243,28 +243,43 @@ class checker:
                 item=self.guiBoard[row][column]
                 if type(item) is Piece and item.color==color:
                     item.highLight(self.screen)
-    def showText(self):
+    def showText(self,blackWin,whiteWin):
         if self.whitePieces==0:
-            winningTxt=self.font.render("black has won", True, TEXTCOLOR, WHITE)
-            winningtxtRect = winningTxt.get_rect()
-            winningtxtRect.center=(500,30)
-            self.screen.blit(winningTxt, winningtxtRect)
+            # winningTxt=self.font.render("black has won", True, TEXTCOLOR, WHITE)
+            # winningtxtRect = winningTxt.get_rect()
+            # winningtxtRect.center=(500,30)
+            # self.screen.blit(winningTxt, winningtxtRect)
             return "BLACK_WON"
         if self.blackPieces==0:
-            winningTxt=self.font.render("white has won", True, TEXTCOLOR, WHITE)
-            winningtxtRect = winningTxt.get_rect()
-            winningtxtRect.center=(600,30)
-            self.screen.blit(winningTxt, winningtxtRect)
+            # winningTxt=self.font.render("white has won", True, TEXTCOLOR, WHITE)
+            # winningtxtRect = winningTxt.get_rect()
+            # winningtxtRect.center=(600,30)
+            # self.screen.blit(winningTxt, winningtxtRect)
             return "WHITE_WON"
+
+        BlackWonText=self.font.render("Black Won ---"+str(blackWin), True,TEXTCOLOR, WHITE)
+        BlackWonTextRect = BlackWonText.get_rect()
+        WhiteWonText=self.font.render("White Won ---"+str(whiteWin), True,TEXTCOLOR, WHITE)
+        WhiteWonTextRect = WhiteWonText.get_rect()
+        
+        WhiteWonTextRect.center=(600,50)
+        self.screen.blit(WhiteWonText, WhiteWonTextRect)
+        BlackWonTextRect.center=(600,100)
+        self.screen.blit(BlackWonText, BlackWonTextRect)
+
+
+
+        # counts TEXTs
         whitePieceTxt=self.font.render("white count:"+str(self.whitePieces), True, TEXTCOLOR, WHITE)
         blackPieceTxt=self.font.render("black count:"+str(self.blackPieces), True, TEXTCOLOR, WHITE)
         whitePiecetxtRect = whitePieceTxt.get_rect()
-        whitePiecetxtRect.center=(600,100)
+        whitePiecetxtRect.center=(600,250)
         blackPiecetxtRect = blackPieceTxt.get_rect()
-        blackPiecetxtRect.center=(600,150)
+        blackPiecetxtRect.center=(600,300)
         self.screen.blit(whitePieceTxt, whitePiecetxtRect)
-        
         self.screen.blit(blackPieceTxt, blackPiecetxtRect)
+
+
     def oppnentDictMaker(self,turn):
             oppDict={}
             for row in range(8):
