@@ -6,6 +6,8 @@ import sys
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
+LIGHTBLUE = (171, 203, 255)
+TEXTCOLOR = (3, 99, 255)
 
 # Set up the display
 width, height = 800, 600
@@ -21,7 +23,7 @@ class Game:
         self.opponentDict=self.checker.oppnentDictMaker(self.turn)
         self.blackWin=0
         self.whiteWin=0
-        self.showMenu("New Game")
+        # self.showMenu("New Game")
         while True:
             gameWon = self.start()
             if gameWon == "BLACK_WON":
@@ -33,7 +35,7 @@ class Game:
 
     def showMenu(self,text):
         font = pygame.font.Font('freesansbold.ttf', 32)
-        NewGame=font.render(text, True, (0,100,150), (100,12,160))
+        NewGame=font.render(text, True, TEXTCOLOR, WHITE)
         NewGameRect = NewGame.get_rect()
         while True:
             for event in pygame.event.get():
@@ -47,17 +49,17 @@ class Game:
             screen.fill(WHITE)
             
             
-            NewGameRect.center=(500,30)
+            NewGameRect.center=(width/2,30)
             screen.blit(NewGame, NewGameRect)
             # Update the display
             pygame.display.flip()
     def showFinishMenu(self,text):
         font = pygame.font.Font('freesansbold.ttf', 32)
-        TryAgain=font.render("Try Again", True, (0,100,150), (100,12,160))
+        TryAgain=font.render("Try Again", True,TEXTCOLOR, WHITE)
         TryAgainRect = TryAgain.get_rect()
-        BlackWonText=font.render("Black Won ---"+str(self.blackWin), True, (0,100,150), (100,12,160))
+        BlackWonText=font.render("Black Won ---"+str(self.blackWin), True,TEXTCOLOR, WHITE)
         BlackWonTextRect = BlackWonText.get_rect()
-        WhiteWonText=font.render("White Won ---"+str(self.whiteWin), True, (0,100,150), (100,12,160))
+        WhiteWonText=font.render("White Won ---"+str(self.whiteWin), True,TEXTCOLOR, WHITE)
         WhiteWonTextRect = WhiteWonText.get_rect()
         while True:
             for event in pygame.event.get():
@@ -69,11 +71,11 @@ class Game:
                     pygame.quit()
                     sys.exit()
             screen.fill(WHITE)
-            WhiteWonTextRect.center=(500,200)
+            WhiteWonTextRect.center=(width/2,200)
             screen.blit(WhiteWonText, WhiteWonTextRect)
-            BlackWonTextRect.center=(500,100)
+            BlackWonTextRect.center=(width/2,100)
             screen.blit(BlackWonText, BlackWonTextRect)
-            TryAgainRect.center=(500,30)
+            TryAgainRect.center=(width/2,30)
             screen.blit(TryAgain, TryAgainRect)
             # Update the display
             pygame.display.flip()
@@ -148,7 +150,7 @@ class Game:
                     sys.exit()
             
             # Clear the screen
-            screen.fill(GREEN)
+            screen.fill(LIGHTBLUE)
             self.checker.drawGuiBoard(self.turn)
             gameEnded = self.checker.showText()
             if gameEnded == "BLACK_WON" or gameEnded == "WHITE_WON":
@@ -164,4 +166,6 @@ class Game:
                 self.checker.highlightMoves(self.possibleMoves)
             # Update the display
             pygame.display.flip()
-game=Game(screen)
+
+if __name__ == "__main__":
+    game=Game(screen)

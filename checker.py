@@ -1,6 +1,6 @@
 import pygame
 from base import *
-
+from game import TEXTCOLOR,WHITE
 
 # gui checkers contains all the function to manuplite the underlying Base Class
 class checker:
@@ -245,19 +245,19 @@ class checker:
                     item.highLight(self.screen)
     def showText(self):
         if self.whitePieces==0:
-            winningTxt=self.font.render("black has won", True, (0,100,150), (100,12,160))
+            winningTxt=self.font.render("black has won", True, TEXTCOLOR, WHITE)
             winningtxtRect = winningTxt.get_rect()
             winningtxtRect.center=(500,30)
             self.screen.blit(winningTxt, winningtxtRect)
             return "BLACK_WON"
         if self.blackPieces==0:
-            winningTxt=self.font.render("white has won", True, (0,100,150), (100,12,160))
+            winningTxt=self.font.render("white has won", True, TEXTCOLOR, WHITE)
             winningtxtRect = winningTxt.get_rect()
             winningtxtRect.center=(600,30)
             self.screen.blit(winningTxt, winningtxtRect)
             return "WHITE_WON"
-        whitePieceTxt=self.font.render("white count:"+str(self.whitePieces), True, (0,100,150), (100,12,160))
-        blackPieceTxt=self.font.render("black count"+str(self.blackPieces), True, (0,100,150), (100,12,160))
+        whitePieceTxt=self.font.render("white count:"+str(self.whitePieces), True, TEXTCOLOR, WHITE)
+        blackPieceTxt=self.font.render("black count:"+str(self.blackPieces), True, TEXTCOLOR, WHITE)
         whitePiecetxtRect = whitePieceTxt.get_rect()
         whitePiecetxtRect.center=(600,100)
         blackPiecetxtRect = blackPieceTxt.get_rect()
